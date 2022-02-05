@@ -104,13 +104,15 @@ class App extends React.Component {
     console.log(this.state.input);
     app.models
       .predict(
-        Clarifai.COLOR_MODEL,
+        Clarifai.FACE_DETECT_MODEL,
         // THE JPG
         this.state.input
       )
-      .then((response) => {
-        console.log(response);
-      })
+      .then((response) =>
+        console.log(
+          response.outputs[0].data.regions[0].region_info.bounding_box
+        )
+      )
       .catch((err) => {
         console.log(err);
       });
@@ -131,7 +133,8 @@ class App extends React.Component {
           on_input_change={this.on_input_change}
           on_button_submit={this.on_submit}
         ></ImageLinkForm>
-        <FaceRecognition link={this.state.image_url}></FaceRecognition>
+        {/* CHANGED */}
+        <FaceRecognition link={this.state.input}></FaceRecognition>
       </div>
     );
   }
