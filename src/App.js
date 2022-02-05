@@ -91,7 +91,7 @@ class App extends React.Component {
     super();
     this.state = {
       input: "",
-      image_ur: "",
+      image_url: "",
     };
   }
 
@@ -101,12 +101,12 @@ class App extends React.Component {
 
   on_submit = () => {
     this.setState({ image_url: this.state.input });
-
+    console.log(this.state.input);
     app.models
       .predict(
-        Clarifai.FACE_DETECT_MODEL,
+        Clarifai.COLOR_MODEL,
         // THE JPG
-        "https://i.insider.com/5d321d4ea209d3146d650b4a?width=1100&format=jpeg&auto=webp"
+        this.state.input
       )
       .then((response) => {
         console.log(response);
