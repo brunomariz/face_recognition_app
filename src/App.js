@@ -4,6 +4,8 @@ import Logo from "./components/Logo/Logo";
 import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
 import Rank from "./components/Rank/Rank";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
+import SignIn from "./components/SignIn/SignIn";
+import Register from "./components/Register/Register";
 import Particles from "react-tsparticles";
 import React, { Component } from "react";
 import Clarifai from "clarifai";
@@ -90,10 +92,12 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      input: "https://picsum.photos/200",
-      image_url: "",
+      input: "https://picsum.photos/600",
+      image_url: "https://picsum.photos/600",
       box: {},
       show_box: false,
+      route: "signin",
+      is_signed_in: false,
     };
   }
 
@@ -138,6 +142,15 @@ class App extends React.Component {
       });
   };
 
+  on_route_change = (route) => {
+    this.setState({ route: route });
+    if (route == "signout") {
+      this.setState({ is_signed_in: false });
+    } else if (route == "home") {
+      this.setState({ is_signed_in: true });
+    }
+  };
+
   render() {
     return (
       <div className='App'>
@@ -146,23 +159,34 @@ class App extends React.Component {
           id='tsparticles'
           options={particles_options}
         />
-        <Navigation></Navigation>
-        <Logo></Logo>
-        <Rank></Rank>
-        <div className='center'>
-          <div className='glass-box shadow-2 pa3 ma3'>
-            <ImageLinkForm
-              on_input_change={this.on_input_change}
-              on_button_submit={this.on_submit}
-            ></ImageLinkForm>
-            {/* CHANGED */}
-            <FaceRecognition
-              box={this.state.box}
-              link={this.state.input}
-              show_box={this.state.show_box}
-            ></FaceRecognition>
+        <Navigation
+          is_signed_in={this.state.is_signed_in}
+          on_route_change={this.on_route_change}
+        ></Navigation>
+        {this.state.route == "home" ? (
+          <div>
+            <Logo></Logo>
+            <Rank></Rank>
+            <div className='center'>
+              <div className='glass-box shadow-2 pa3 ma3'>
+                <ImageLinkForm
+                  on_input_change={this.on_input_change}
+                  on_button_submit={this.on_submit}
+                ></ImageLinkForm>
+                {/* CHANGED */}
+                <FaceRecognition
+                  box={this.state.box}
+                  link={this.state.input}
+                  show_box={this.state.show_box}
+                ></FaceRecognition>
+              </div>
+            </div>
           </div>
-        </div>
+        ) : this.state.route == "signin" ? (
+          <SignIn on_route_change={this.on_route_change}></SignIn>
+        ) : (
+          <Register on_route_change={this.on_route_change}></Register>
+        )}
       </div>
     );
   }
