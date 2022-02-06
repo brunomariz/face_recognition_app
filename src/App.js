@@ -92,16 +92,37 @@ class App extends React.Component {
     this.state = {
       input: "",
       image_url: "",
+      box: {},
+      show_box: false,
     };
   }
 
+  calculate_face_location = (data) => {
+    const clarifai_face =
+      data.outputs[0].data.regions[0].region_info.bounding_box;
+    const image = document.getElementById("inputImage");
+    const width = Number(image.width);
+    const height = Number(image.height);
+
+    return {
+      left_col: clarifai_face.left_col * width,
+      top_row: clarifai_face.top_row * height,
+      right_col: width - clarifai_face.right_col * width,
+      bottom_row: height - clarifai_face.bottom_row * height,
+    };
+  };
+
+  display_face_box = (box) => {
+    console.log(box);
+    this.setState({ box: box });
+  };
+
   on_input_change = (event) => {
-    this.setState({ input: event.target.value });
+    this.setState({ input: event.target.value, show_box: false });
   };
 
   on_submit = () => {
-    this.setState({ image_url: this.state.input });
-    console.log(this.state.input);
+    this.setState({ image_url: this.state.input, show_box: true });
     app.models
       .predict(
         Clarifai.FACE_DETECT_MODEL,
@@ -109,9 +130,7 @@ class App extends React.Component {
         this.state.input
       )
       .then((response) =>
-        console.log(
-          response.outputs[0].data.regions[0].region_info.bounding_box
-        )
+        this.display_face_box(this.calculate_face_location(response))
       )
       .catch((err) => {
         console.log(err);
@@ -134,7 +153,11 @@ class App extends React.Component {
           on_button_submit={this.on_submit}
         ></ImageLinkForm>
         {/* CHANGED */}
-        <FaceRecognition link={this.state.input}></FaceRecognition>
+        <FaceRecognition
+          box={this.state.box}
+          link={this.state.input}
+          show_box={this.state.show_box}
+        ></FaceRecognition>
       </div>
     );
   }
