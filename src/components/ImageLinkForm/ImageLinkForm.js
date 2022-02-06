@@ -4,9 +4,9 @@ import "./ImageLinkForm.css";
 const ImageLinkForm = ({ on_input_change, on_button_submit }) => {
   return (
     <div>
-      <p className='f3 tc'>{`This magic brain will detect faces in your pictures.`}</p>
+      <p className='f3 tc'>{`This app will detect faces in your pictures.`}</p>
       <div className='center'>
-        <div className='form pa4 shadow-3'>
+        <div className='glass-box pa4 shadow-3'>
           <input
             onChange={on_input_change}
             className='f4 pa2 w-70 tc'

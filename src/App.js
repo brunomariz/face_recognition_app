@@ -55,7 +55,7 @@ const particles_options = {
       width: 2,
     },
     collisions: {
-      enable: true,
+      enable: false,
     },
     move: {
       direction: "none",
@@ -90,7 +90,7 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      input: "",
+      input: "https://picsum.photos/200",
       image_url: "",
       box: {},
       show_box: false,
@@ -122,7 +122,7 @@ class App extends React.Component {
   };
 
   on_submit = () => {
-    this.setState({ image_url: this.state.input, show_box: true });
+    this.setState({ image_url: this.state.input });
     app.models
       .predict(
         Clarifai.FACE_DETECT_MODEL,
@@ -132,6 +132,7 @@ class App extends React.Component {
       .then((response) =>
         this.display_face_box(this.calculate_face_location(response))
       )
+      .then(this.setState({ show_box: true }))
       .catch((err) => {
         console.log(err);
       });
@@ -148,16 +149,20 @@ class App extends React.Component {
         <Navigation></Navigation>
         <Logo></Logo>
         <Rank></Rank>
-        <ImageLinkForm
-          on_input_change={this.on_input_change}
-          on_button_submit={this.on_submit}
-        ></ImageLinkForm>
-        {/* CHANGED */}
-        <FaceRecognition
-          box={this.state.box}
-          link={this.state.input}
-          show_box={this.state.show_box}
-        ></FaceRecognition>
+        <div className='center'>
+          <div className='glass-box shadow-2 pa3 ma3'>
+            <ImageLinkForm
+              on_input_change={this.on_input_change}
+              on_button_submit={this.on_submit}
+            ></ImageLinkForm>
+            {/* CHANGED */}
+            <FaceRecognition
+              box={this.state.box}
+              link={this.state.input}
+              show_box={this.state.show_box}
+            ></FaceRecognition>
+          </div>
+        </div>
       </div>
     );
   }
