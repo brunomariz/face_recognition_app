@@ -12,7 +12,7 @@ const FaceRecognition = ({ link, box, show_box }) => {
           id='inputImage'
           alt=''
           style={{ height: "30rem", width: "auto" }}
-          className='na shadow-2'
+          className={show_box ? "na shadow-2" : "na"}
         />
         {show_box ? (
           <div

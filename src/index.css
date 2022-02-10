@@ -24,4 +24,5 @@ button {
 .glass-box {
   box-shadow: black;
   background: rgb(200, 251, 255, 0.1);
+  backdrop-filter: blur(0.1rem);
 }
