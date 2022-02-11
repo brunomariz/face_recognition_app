@@ -98,8 +98,27 @@ class App extends React.Component {
       show_box: false,
       route: "signin",
       is_signed_in: false,
+      user: {
+        name: "",
+        email: "",
+        id: "",
+        entries: 0,
+        joined: "",
+      },
     };
   }
+
+  load_user = (data) => {
+    this.setState({
+      user: {
+        name: data.name,
+        email: data.email,
+        id: data.id,
+        entries: data.entries,
+        joined: data.joined,
+      },
+    });
+  };
 
   calculate_face_location = (data) => {
     const clarifai_face =
@@ -133,9 +152,28 @@ class App extends React.Component {
         // THE JPG
         this.state.input
       )
-      .then((response) =>
-        this.display_face_box(this.calculate_face_location(response))
-      )
+      .then((response) => {
+        if (response) {
+          fetch("http://localhost:3002/image", {
+            method: "put",
+            headers: { "Content-type": "application/json" },
+            body: JSON.stringify({
+              id: this.state.user.id,
+            }),
+          })
+            .then((response) => response.json())
+            .then((count) => {
+              console.log(count);
+              this.setState({
+                user: {
+                  ...this.state.user,
+                  entries: count,
+                },
+              });
+            });
+        }
+        this.display_face_box(this.calculate_face_location(response));
+      })
       .then(this.setState({ show_box: true }))
       .catch((err) => {
         console.log(err);
@@ -166,7 +204,10 @@ class App extends React.Component {
         {this.state.route == "home" ? (
           <div>
             <Logo></Logo>
-            <Rank></Rank>
+            <Rank
+              name={this.state.user.name}
+              entries={this.state.user.entries}
+            ></Rank>
             <div className='center'>
               <div className='glass-box shadow-2 pa3 ma3'>
                 <ImageLinkForm
@@ -183,9 +224,15 @@ class App extends React.Component {
             </div>
           </div>
         ) : this.state.route == "signin" ? (
-          <SignIn on_route_change={this.on_route_change}></SignIn>
+          <SignIn
+            load_user={this.load_user}
+            on_route_change={this.on_route_change}
+          ></SignIn>
         ) : (
-          <Register on_route_change={this.on_route_change}></Register>
+          <Register
+            load_user={this.load_user}
+            on_route_change={this.on_route_change}
+          ></Register>
         )}
       </div>
     );

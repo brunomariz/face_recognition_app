@@ -30,7 +30,9 @@ class SignIn extends React.Component {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data == "Signed in!") {
+        console.log(data.id);
+        if (data.id) {
+          this.props.load_user(data);
           this.props.on_route_change("home");
         }
       });
