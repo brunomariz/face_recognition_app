@@ -88,24 +88,26 @@ const particles_options = {
   detectRetina: true,
 };
 
+const initial_state = {
+  input: "https://picsum.photos/600",
+  image_url: "https://picsum.photos/600",
+  box: {},
+  show_box: false,
+  route: "signin",
+  is_signed_in: false,
+  user: {
+    name: "",
+    email: "",
+    id: "",
+    entries: 0,
+    joined: "",
+  },
+};
+
 class App extends React.Component {
   constructor() {
     super();
-    this.state = {
-      input: "https://picsum.photos/600",
-      image_url: "https://picsum.photos/600",
-      box: {},
-      show_box: false,
-      route: "signin",
-      is_signed_in: false,
-      user: {
-        name: "",
-        email: "",
-        id: "",
-        entries: 0,
-        joined: "",
-      },
-    };
+    this.state = initial_state;
   }
 
   load_user = (data) => {
@@ -170,7 +172,8 @@ class App extends React.Component {
                   entries: count,
                 },
               });
-            });
+            })
+            .catch(console.log);
         }
         this.display_face_box(this.calculate_face_location(response));
       })
@@ -183,7 +186,7 @@ class App extends React.Component {
   on_route_change = (route) => {
     this.setState({ route: route });
     if (route == "signout") {
-      this.setState({ is_signed_in: false });
+      this.setState(initial_state);
     } else if (route == "home") {
       this.setState({ is_signed_in: true });
     }
@@ -223,7 +226,7 @@ class App extends React.Component {
               </div>
             </div>
           </div>
-        ) : this.state.route == "signin" ? (
+        ) : this.state.route == "signin" || this.state.route == "signout" ? (
           <SignIn
             load_user={this.load_user}
             on_route_change={this.on_route_change}
