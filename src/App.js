@@ -1,13 +1,13 @@
-import "./App.css";
-import Navigation from "./components/Navigation/Navigation";
-import Logo from "./components/Logo/Logo";
-import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
-import Rank from "./components/Rank/Rank";
-import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
-import SignIn from "./components/SignIn/SignIn";
-import Register from "./components/Register/Register";
+import React from "react";
 import Particles from "react-tsparticles";
-import React, { Component } from "react";
+import "./App.css";
+import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
+import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
+import Logo from "./components/Logo/Logo";
+import Navigation from "./components/Navigation/Navigation";
+import Rank from "./components/Rank/Rank";
+import Register from "./components/Register/Register";
+import SignIn from "./components/SignIn/SignIn";
 
 const particles_options = {
   background: {},
@@ -191,10 +191,10 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className='App'>
+      <div className="App">
         <Particles
-          className='particles'
-          id='tsparticles'
+          className="particles"
+          id="tsparticles"
           options={particles_options}
         />
         <Navigation
@@ -208,8 +208,8 @@ class App extends React.Component {
               name={this.state.user.name}
               entries={this.state.user.entries}
             ></Rank>
-            <div className='center'>
-              <div className='glass-box shadow-2 pa3 ma3'>
+            <div className="center">
+              <div className="glass-box shadow-2 pa3 ma3">
                 <ImageLinkForm
                   on_input_change={this.on_input_change}
                   on_button_submit={this.on_submit}
